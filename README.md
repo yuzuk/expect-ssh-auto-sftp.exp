@@ -1,6 +1,6 @@
 # expect-ssh-auto-sftp.exp
 
-##expectを使ってSFTP通信シェルスクリプト
+## expectを使ってSFTP通信シェルスクリプト
 
 expectを使って対話式にAサーバとBサーバでSFTP通信を自動化します。
 
