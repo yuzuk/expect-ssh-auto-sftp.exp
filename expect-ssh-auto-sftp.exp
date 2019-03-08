@@ -1,0 +1,54 @@
+#!/usr/bin/expect
+
+set date [timestamp -format %Y%m%d_%H%M%S]
+set log_name "/var/log/expect_${date}.log"
+
+log_file $log_name
+
+set RemoteHost [lindex $argv 0]
+set PW [lindex $argv 1]
+set CD [lindex $argv 2]
+set FileName [lindex $argv 3]
+set Prompt "\[#$%>\]"
+
+set timeout 100
+
+spawn env LANG=C /usr/bin/sftp ${RemoteHost}
+expect {
+    "(yes/no)?" {
+        send "yes\n\r"
+        exp_continue
+    }
+    -re "password:" {
+        send -- "${PW}\n"
+    }
+}
+
+expect {
+     "sftp>" {
+        log_user 1
+        send "cd ${CD}\n"
+    }
+}
+
+expect {
+    "sftp>" {
+        log_user 1
+        send "ls\n"
+    }
+}
+
+expect {
+    "sftp>" {
+        log_user 1
+        send "get ${FileName}\n"
+    }
+}
+
+expect {
+    "sftp>" {
+        log_user 1
+        send "exit\n"
+        exit 0
+    }
+}
